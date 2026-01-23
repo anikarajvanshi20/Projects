@@ -1,1 +1,19 @@
+project:
+  type: website
+
+website:
+  title: "National Well-Being & Global Music Consumption"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: dashboard.qmd
+        text: Interactive Dashboard
+      - href: report.qmd
+        text: Full Report
+
+format:
+  html:
+    theme: cosmo
+    toc: true
 
