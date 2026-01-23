@@ -1,0 +1,22 @@
+---
+title: "How Does National Well-Being Shape Global Music Consumption?"
+---
+
+## About This Project
+This research explores how economic uncertainty and social support influence global music
+consumption patterns using Spotify streaming data and the World Happiness Report across
+20 countries.
+
+## Key Questions
+- Does uncertainty increase repetitive listening?
+- Does low social support and high economic uncertainity increase positive music consumption?
+- Does economic stress drive nostalgia?
+
+## Tools & Methods
+- R, tidyverse, ggplot2, Plotly
+- Index construction using z-score normalization
+- Cross-national correlation analysis
+
+## View the Work
+- 📊 [Interactive Dashboard](dashboard.qmd)
+- 📄 [Full Research Report](report.qmd)
