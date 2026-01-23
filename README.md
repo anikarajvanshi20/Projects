@@ -1,13 +1,13 @@
-# Projects Portfolio
+# Projects
 
 ## About Me
-I am Anika Rajvanshi, a BSc (Hons) Psychology major with research and a minor in Biology at Ashoka University. This portfolio features selected academic, independent, and mentored projects in neuroscience, psychology, and data science.
+I am Anika Rajvanshi, a BSc (Hons) Psychology major and a minor in Biology at Ashoka University. This portfolio features selected academic, independent, and mentored projects in neuroscience, psychology, and data science.
 
 ---
 
 ## Portfolio Navigation
 - [**Computational_Neuroscience**](Computational_Neuroscience/)
-   Projects on curiosity, quantitative cognition, and behavioral neuroscience using Jupyter notebooks and Python.
+   Project on modelling hebbian learning using Jupyter notebooks and Python.
 - [**Machine_Learning**](Machine_Learning/)
   Data science and machine learning projects.
 - [**R_programming**](R_programming/) 
