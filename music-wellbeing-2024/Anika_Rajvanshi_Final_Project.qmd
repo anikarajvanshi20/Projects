@@ -1,0 +1,469 @@
+---
+title: "How does national well-being Shape Global Music Consumption in 2024?"
+format: pdf
+editor: visual
+warning: false
+---
+The 3 datasets used:
+
+-   Global streaming data from spotify for 2024
+
+-   World happiness report 2024
+
+-   World happiness report 2023
+
+## Hypothesis
+
+**H1**: Populations facing higher economic uncertainty will exhibit higher levels of repetitive music consumption.
+
+**Rationale**: Research shows that individuals often prefer familiar music over new music (Pereira et al., 2011). This implies in times of stress and unpredictability, individuals will choose more familiar music rather than experiment. This was quantified through assessing how many times songs were repeatedly streamed.
+
+*Independent Variable*: Economic Uncertainty Index
+
+*Dependent Variable*: Spotify Repetition Score (Streams per Listener)
+
+**H2**: Populations with lower levels of social support and higher economic uncertainty will consume a higher proportion of positive music.
+
+**Rationale**: This hypothesis was based on research conducted by de Lucio & Palomeque (2024) who found that when there is economic uncertainty and low social support, individuals lack external resources for mood regulation and rely on positive music instead. There exists a relatively novel term for this phenomenon known as recession pop which suggests that the rise of consumption in upbeat or pop music can be a recession indicator (Dickler & Solá, 2024).
+
+*Independent Variable*: Economic Uncertainty Index and Social Support Index
+
+*Dependent Variable*: Positive Music Share
+
+**H3**: Higher economic uncertainty correlates with a preference for older music.
+
+**Rationale**: Uncertainty drives a psychological retreat into the safe past. Listeners in uncertain economies will stream music with older average release years to evoke simpler, more stable times. Gibbs & Egermann (2021) found that nostalgic music boosts positive emotions and can be used as an emotion regulation technique.
+
+*Independent Variable*: Economic Uncertainty Index
+
+*Dependent Variable*: Nostalgia Index
+
+## Motivation
+
+To test the three hypothesis established by research above where populations facing economic uncertainty or low social support regulate their mood through specific media consumption habits for the year 2024.
+
+## Data Cleaning
+
+1.  The first step was importing the datasets in R. The sheets were all converted to csvs for ease.
+
+```{r}
+# | echo: false
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(ggrepel)
+library(corrplot)
+spotify_dataset <- read.csv("Spotify_2024_Global_Streaming_Data.csv")
+happiness_report_2024 <- read.csv("WHR24_Data_Figure_2.1.csv")
+happiness_report_2023  <- read.csv("WHR23_Data_Figure_2.1.csv")
+```
+
+2.  Then only relevant columns which were of interest from both reports were selected. These included the total score and the components explained by different factors. Then the columns were renamed to make the datasets easier to work with.
+
+```{r}
+happiness_report_2023 <- happiness_report_2023 %>% 
+  select(Country.name, Ladder.score, Explained.by..Log.GDP.per.capita,
+         Explained.by..Freedom.to.make.life.choices,
+         Explained.by..Generosity, Explained.by..Social.support,
+         Explained.by..Healthy.life.expectancy,
+         Explained.by..Perceptions.of.corruption, Dystopia...residual) %>% 
+  rename(GDP_per_capita = Explained.by..Log.GDP.per.capita,
+         Freedom_life_choices = Explained.by..Freedom.to.make.life.choices,
+         Generosity = Explained.by..Generosity, 
+         Social_support = Explained.by..Social.support,
+         Healthy_life_expectancy = Explained.by..Healthy.life.expectancy,
+         Corruption = Explained.by..Perceptions.of.corruption,
+         Dystopia = Dystopia...residual) 
+
+happiness_report_2024 <- happiness_report_2024 %>% 
+  select(!c(upperwhisker, lowerwhisker)) %>% 
+  rename(GDP_per_capita = Explained.by..Log.GDP.per.capita,
+         Freedom_life_choices = Explained.by..Freedom.to.make.life.choices,
+         Generosity = Explained.by..Generosity, 
+         Social_support = Explained.by..Social.support,
+         Healthy_life_expectancy = Explained.by..Healthy.life.expectancy,
+         Corruption = Explained.by..Perceptions.of.corruption,
+         Dystopia = Dystopia...residual) 
+
+spotify_dataset <- spotify_dataset %>% 
+  rename(Release_Year = Release.Year, 
+         Monthly_Listeners_Millions = Monthly.Listeners..Millions.,
+         Total_Streams_Millions = Total.Streams..Millions.,
+         Platform_Type = Platform.Type, 
+         Skip_Rate = Skip.Rate...., 
+         Total_hours_Streamed = Total.Hours.Streamed..Millions.)
+
+```
+
+3.  Then the countries of interest were identified from the spotify dataset using unique since the dataset includes several entries for each country and these names were saved as a vector.
+
+The countries were sorted alphabetically in the happiness report datasets to find the countries of interest and check which ones differed from the spotify dataset. Then case when was used to fix the discrepancies in the names of countries across the datasets and the relevant countries were filtered out from the happiness datasets.
+
+```{r}
+countries_of_interest <- unique(spotify_dataset$Country)
+countries_of_interest
+
+happiness_report_2023 <- happiness_report_2023 %>% 
+  arrange(Country.name) %>% 
+  mutate(Country.name = case_when(
+    Country.name == "Turkiye" ~ "Turkey",
+    TRUE ~ Country.name)) %>% 
+  filter(Country.name %in% countries_of_interest)
+
+happiness_report_2023
+
+happiness_report_2024 <- happiness_report_2024 %>% 
+  arrange(Country.name) %>% 
+  mutate(Country.name = case_when(
+    Country.name == "Turkiye" ~ "Turkey",
+    TRUE ~ Country.name)) %>% 
+  filter(Country.name %in% countries_of_interest)
+
+happiness_report_2024
+```
+
+## Data Wrangling
+
+1.  The two happiness report datasets from 2023 and 2024 were joined using a full join to ensure no country was dropped in case of minor mismatches across reports. The suffix was changed from x and y to make it easier to handle later and clearer to understand.
+
+```{r}
+joined_whr <- full_join(x = happiness_report_2023, 
+                        y = happiness_report_2024, 
+                        by = "Country.name",
+                        suffix = c(".2023", ".2024"))
+```
+
+2.The genres in the spotify dataset were converted to factor. Then using the unique function, all the genres were assesed. They were then classified into two categories upbeat music and mellow music. These categories were saved as individual values. Then a new column was added called category and the respective categories were added using case when.Then the columns that were not needed removed.
+
+```{r}
+spotify_dataset$Genre <- as.factor(spotify_dataset$Genre)
+
+unique(spotify_dataset$Genre)
+
+Upbeat_genres <- c("Pop", "K-pop", "EDM", "Reggaeton", "Hip Hop")
+Mellow_genres <- c("Rock", "R&B", "Jazz", "Classical", "Indie")
+
+spotify_dataset_modified <- spotify_dataset %>% 
+  mutate(Category = case_when(
+    Genre %in% Upbeat_genres ~ "Upbeat",
+    Genre %in% Mellow_genres ~ "Mellow",
+    TRUE ~ "Other"
+  )) %>% 
+  select(!c(Artist, Album, Avg.Stream.Duration..Min.))
+
+```
+
+3.  The dependent variables were constructed from the spotify dataset by creating 4 scores. The data was grouped by country. The first the repetition score to test comfort listening. This was calculated by diving the sum of the total streams by the sum of monthly listeners. Then the nostalgia index was calculated by taking difference between the weighted mean if the release year in respect to the total hours streamed and 2024. The avg skip rate was calculted by the weighted mean of the skip rate against the total streams. Finally, the positive share was calculated as the proportion of total listening hours devoted to upbeat music.
+
+```{r}
+metrics <- spotify_dataset_modified %>%
+  group_by(Country) %>%
+  summarise(
+    Repetition_Score = sum(Total_Streams_Millions) /
+  sum(Monthly_Listeners_Millions),
+    nostalgia_index = 2024 - weighted.mean(Release_Year, w = Total_hours_Streamed),
+    Avg_Skip_Rate = weighted.mean(Skip_Rate, w = Total_Streams_Millions),
+    Positive_Hours = sum(Total_hours_Streamed[Category == "Upbeat"])/
+    sum(Total_hours_Streamed),
+    .groups = "drop")
+```
+
+4.  Next the changes from the year 2023 to 2024 were calculating by subtracting each column in the joined dataset. This was done to quantify the increase or decrease in the national well-being.
+
+```{r}
+whr_changes <- joined_whr %>% 
+  mutate(delta_ladder = Ladder.score.2024 - Ladder.score.2023,
+         delta_gdp = GDP_per_capita.2024 - GDP_per_capita.2023,
+         delta_freedom = Freedom_life_choices.2024 - Freedom_life_choices.2023,
+         delta_generosity = Generosity.2024 - Generosity.2023,
+         delta_social_support = Social_support.2024 - Social_support.2023,
+         delta_hle = Healthy_life_expectancy.2024 - Healthy_life_expectancy.2023,
+         delta_corruption = Corruption.2024 - Corruption.2023,
+         delta_dystopia = Dystopia.2024 - Dystopia.2023) %>% 
+  select(Country.name, delta_ladder, 
+         delta_gdp,delta_corruption, delta_dystopia, 
+         delta_generosity, delta_social_support, 
+         delta_freedom, delta_hle)
+
+whr_changes
+```
+
+5.  A z function was created that scaled the values to create the indices. The differences were scaled using the z function. For worsened outcomes the scaling was inversed to better construct the economic uncertainty index. Then the indices were created by first binding the columns for the parameters of interest and then finding their row means. Then the country names and the calculated indices were selected for further analysis.
+
+```{r}
+z <- function(x) {
+  as.numeric(scale(x))
+}
+
+whr_indices <- whr_changes %>% 
+  mutate(z_gdp = z(x = delta_gdp),
+         z_gdp_worsen = - z(x = delta_gdp),
+         z_corruption_worsen = - z(x = delta_corruption),
+         z_dystopia_worsen = - z(x = delta_dystopia),
+         z_social_support = z(x = delta_social_support),
+         z_generosity = z(x = delta_generosity),
+         z_hle = z(x = delta_hle),
+         z_freedom = z(x = delta_freedom),
+         economics_uncertainty_index = rowMeans(
+           cbind(z_gdp_worsen,z_corruption_worsen, z_dystopia_worsen)), 
+         social_support_index = rowMeans(
+           cbind(z_social_support, z_generosity)), 
+         life_eval_index = rowMeans(
+           cbind(z_hle, z_freedom))) %>%
+  select(Country.name, economics_uncertainty_index, 
+         social_support_index, life_eval_index)
+
+whr_indices 
+
+```
+
+6.  Then both the modified datasets were joined by the country names.
+
+```{r}
+joined_genre_well_being <- full_join(x = metrics,
+                                     y =  whr_indices, 
+                                     by = c("Country" = "Country.name"))
+
+joined_genre_well_being
+```
+
+## Data Visualization
+
+1.  Well-being change plot
+
+```{r}
+ggplot(data = whr_changes, 
+       mapping = aes(x = Country.name, 
+                     y = delta_ladder, 
+                     fill = delta_ladder > 0)) +
+  geom_col(show.legend = FALSE) +
+  geom_hline(yintercept = 0, color = "black", size = 0.2) +
+  scale_fill_manual(values = c("TRUE" = "green", "FALSE" = "red")) +
+  labs(
+    title = "Well-Being Change (2023-2024)",
+    x = NULL,
+    y = "Change in Ladder Score") +
+  theme_clean(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = 0.5), 
+        plot.title = element_text(hjust = 0.5))
+```
+
+Out of the 20 countries, 9 showed an increase in overall well-being from 2023 to 2024 while 11 showed a decrease. To understand the impact on each component this plot was further faceted by individual metrics.
+
+2.  Well-being change plot for each component
+
+```{r}
+whr_plot_data <- whr_changes %>%
+  select(!delta_ladder) %>%
+  pivot_longer(
+    cols = starts_with("delta"), 
+    names_to = "Metric", 
+    values_to = "Change")
+
+ggplot(data = whr_plot_data, 
+       mapping = aes(x = Country.name, 
+                     y = Change, 
+                     fill = Change > 0)) +
+  geom_col(show.legend = FALSE) +
+  geom_hline(yintercept = 0, color = "black", size = 0.2) +
+  facet_wrap(~Metric, scales = "free_y") + 
+  scale_fill_manual(values = c("TRUE" = "green", "FALSE" = "red")) +
+  labs(title = "Drivers of Well-Being Change (2023-2024)",
+    x = NULL,
+    y = "Change in Score") +
+  theme_clean(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = 0.5),
+        plot.title = element_text(hjust = 0.5))
+
+```
+
+Overall, most countries show declines in GDP, social support, and dystopia scores from 2023 to 2024, indicating worsening economic and social conditions alongside higher perceived hardship. In contrast, freedom and healthy life expectancy (HLE) generally increased across countries, suggesting improvements in personal autonomy and health. Changes in corruption and generosity are mixed, with no uniform global trend.
+
+3.  Distributions for the Upbeat vs Mellow Music Across Countries
+
+```{r}
+
+ggplot(data = spotify_dataset_modified, 
+       mapping = aes(x = Country, 
+                     y = Total_hours_Streamed, 
+                     fill = Category)) +
+  geom_boxplot() +
+  theme_clean(base_size = 10) +
+  labs(title = "Distribution of Upbeat vs Mellow Music Across Countries",
+    x = "Country",
+    y = "Total Listening Time(Millions of Hours)") + 
+  coord_flip() + 
+  facet_wrap(~Category, scales = "free_x")
+
+```
+
+Across nearly all countries, Upbeat tracks have higher median listening times and wider variability than Mellow tracks, indicating stronger and more diverse engagement with upbeat music.
+
+## Analysis
+
+In order to analyse the data, first a correlation matrix was constructed using the corrplot package. Then the correlations were visualized using scatterplots and the geom_smooth function to see the line of best fit.
+
+```{r}
+cor_data <- joined_genre_well_being %>%
+  select(economics_uncertainty_index, 
+         social_support_index, 
+         Repetition_Score, 
+         Positive_Hours, 
+         nostalgia_index) %>%
+  rename(Positive_Share = Positive_Hours,
+         Economic_uncertainty = economics_uncertainty_index,
+         Social_Support = social_support_index, 
+         Nostalgia = nostalgia_index)
+
+cor_matrix <- cor(cor_data, use = "pairwise.complete.obs", method = "pearson")
+
+corrplot(cor_matrix,
+  method = "color",
+  type = "upper",
+  order = "hclust", 
+  diag = FALSE,
+  addCoef.col = "black",
+  tl.col = "black",
+  tl.srt = 45)
+
+```
+
+As you can see in the correlation matrix: 1. Economic uncertainty and repetition listening were positively correlated which supports H1 that in times of national economic stress, people prefer listening to comfort music rather than exploring. 2. Economic uncertainty and positive listening share has a moderate positive correlation which supports the h2 where a rise in economic uncertainty leads to consumers choosing more positive music as a way to better cope. Social support and the positive listening share also had a weak negative correlation which supported this finding and implies that low social support leads to higher positive music consumption. 3. Economic uncertainty and nostalgia are negatively correlated which does not support H3 where it was hypothesized that in times of economic stress, consumers will choose older more nostalgic music. The study found that it was the complete opposite. This could be due to the fact that the dataset only includes music released between 2018 to 2023 where as nostalgic music may include music from a lot earlier.
+
+These correlations are visualized below. The labels were added using the ggrepel package.
+
+```{r}
+# H1 
+ggplot(data = joined_genre_well_being, 
+       mapping = aes(x = economics_uncertainty_index, 
+                     y = Repetition_Score)) +
+  geom_point(color = "lightblue3", size = 3) +
+  geom_smooth(method = "lm", 
+              color = "darkblue", 
+              fill = "skyblue", 
+              alpha = 0.2) +
+  geom_text_repel(mapping = aes(label = Country), 
+                  size = 3, 
+                  box.padding = 0.5) +
+  labs(title = "Economic Uncertainty vs Repetitive Listening",
+       x = "Economic Uncertainty Index",
+       y = "Repetition Score (Streams per Listener)") +
+  theme_clean(base_size = 10) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# H2 
+ggplot(data = joined_genre_well_being, 
+       mapping = aes(x = economics_uncertainty_index, 
+                     y = Positive_Hours)) +
+  geom_point(color = "violet", size = 3) + 
+  geom_smooth(method = "lm", 
+              color = "darkblue", 
+              fill = "purple", 
+              alpha = 0.2) +
+  geom_text_repel(aes(label = Country), 
+                  size = 3, 
+                  box.padding = 0.5) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Economic Uncertainty vs Positive Music consumption",
+       x = "Economic uncertainty Index",
+       y = "Share of Positive Music Streamed") +
+  theme_clean(base_size = 10) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggplot(data = joined_genre_well_being, 
+       mapping = aes(x = social_support_index, 
+                     y = Positive_Hours)) +
+  geom_point(color = "turquoise", size = 3) + 
+  geom_smooth(method = "lm", 
+              color = "darkgreen", 
+              fill = "lightgreen", 
+              alpha = 0.2) +
+  geom_text_repel(aes(label = Country), 
+                  size = 3, 
+                  box.padding = 0.5) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Social Support vs Positive Music consumption",
+       x = "Social Support Index",
+       y = "Share of Positive Music Streamed") +
+  theme_clean(base_size = 10) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+# H3
+ggplot(data = joined_genre_well_being, 
+       mapping = aes(x = economics_uncertainty_index, 
+                     y = nostalgia_index)) +
+  geom_point(color = "pink", size = 3) + 
+  geom_smooth(method = "lm", 
+              color = "skyblue", 
+              alpha = 0.2) +
+  geom_text_repel(aes(label = Country), 
+                  size = 3, 
+                  box.padding = 0.5) +
+  labs(title = "Economic uncertainty vs Nostalgia",
+       x = "Economic Uncertainty Index",
+       y = "Nostalgia Index") +
+  theme_clean(base_size = 10) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+```{r}
+#H1
+cor.test(x = cor_data$Economic_uncertainty, 
+         y = cor_data$Repetition_Score, 
+         alternative = "greater")
+
+#H2
+cor.test(x = cor_data$Economic_uncertainty, 
+         y = cor_data$Positive_Share, 
+         alternative = "greater")
+
+cor.test(x = cor_data$Social_Support, 
+         y = cor_data$Positive_Share, 
+         alternative = "less")
+
+#H3
+cor.test(x = cor_data$Economic_uncertainty, 
+         y = cor_data$Nostalgia)
+
+```
+
+When tested for statistical significance:
+
+H1: The positive correlation between economic uncertainty and repetition is not statistically significant since the p-value is greater than 0.05.
+
+H2: The positive correlation between economic uncertainty and positive listening is approaching statistical significance at p-value 0.05383
+
+H3: The correlation between economic uncertainty and nostalgia is statistically significant since the p-value is lesser than 0.05. However, it was a negative correlation which went against the hypothesis.
+
+## Conclusion
+
+To conclude, the study examined how shifts in national well-being relate to global music consumption patterns for the year 2024. While economic uncertainty showed a positive relationship with repetitive listening, this association was not statistically significant, providing only directional but not inferential support for H1. Partial support was found for H2, as higher economic uncertainty was associated with a greater share of positive music consumption at a trend level, and lower social support showed a weak negative association with positive music share, together suggesting that upbeat music may serve as a compensatory emotional resource during socioeconomic stress. Contrary to H3, economic uncertainty was significantly associated with lower nostalgia, indicating a shift toward newer rather than older music during periods of instability. This could be due to how nostalgia was operationalized, as the dataset only included songs released between 2018 and 2023. Overall, these findings suggest that national well-being is meaningfully linked to collective music consumption patterns and that genre-level listening behavior may offer a tentative behavioral marker of socioeconomic conditions.
+
+## AI Disclosure
+
+AI was used to construct the correlation matrix. It was used to improve the well-being plots to go over and under the line and to add the country labels in the correlation plots. It was also used to compare different ways of creating the indices from the world happiness report data which are then all tested to see which was the best approach. Other than that it was only used to debug the entire code at the end.
+
+## References
+
+Anglada-Tort, M., Masters, N., Steffens, J., North, A., & Müllensiefen, D. (2023). The Behavioural Economics of Music: Systematic review and future directions. Quarterly Journal of Experimental Psychology (2006), 76(5), 1177–1194. <https://doi.org/10.1177/17470218221113761>
+
+de Lucio, J., & Palomeque, M. (2023). Music preferences as an instrument of emotional self-regulation along the business cycle. Journal of Cultural Economics, 47(2), 181–204. <https://doi.org/10.1007/s10824-022-09454-7>
+
+Dickler, J., & Solá, A. T. (2024, July 21). ‘Recession pop’ explained: How music collides with economic trends. CNBC. <https://www.cnbc.com/2024/07/21/recession-pop-explained-how-music-collides-with-economic-trends.html>
+
+Gibbs, H., & Egermann, H. (2021). Music-Evoked Nostalgia and Wellbeing During the United Kingdom COVID-19 Pandemic: Content, Subjective Effects, and Function. Frontiers in Psychology, 12, 647891. <https://doi.org/10.3389/fpsyg.2021.647891>
+
+Helliwell, J. F., Layard, R., Sachs, J. D., Neve, J.-E. D., Aknin, L. B., & Wang, S. (2023, March 20). World Happiness Report 2023. <https://worldhappiness.report/ed/2023/>
+
+Helliwell, J. F., Layard, R., Sachs, J. D., Neve, J.-E. D., Aknin, L. B., & Wang, S. (2024, March 20). World Happiness Report 2024. <https://worldhappiness.report/ed/2024/>
+
+Palomeque, M., & de-Lucio, J. (2024). The Soundtrack of a Crisis: More Positive Music Preferences During Economic and Social Adversity. Journal of Happiness Studies, 25(5), 44. <https://doi.org/10.1007/s10902-024-00757-4>
+
+Pereira, C. S., Teixeira, J., Figueiredo, P., Xavier, J., Castro, S. L., & Brattico, E. (2011). Music and emotions in the brain: Familiarity matters. PloS One, 6(11), e27241. <https://doi.org/10.1371/journal.pone.0027241>
+
+Spotify Global Streaming Data (2024). (n.d.). Retrieved 3 December 2025, from <https://www.kaggle.com/datasets/atharvasoundankar/spotify-global-streaming-data-2024>
