@@ -1,0 +1,16 @@
+---
+title: "Interactive Dashboard"
+---
+
+```{r}
+library(tidyverse)
+library(plotly)
+
+data <- read.csv("data/final_dataset.csv")
+
+p <- ggplot(data, aes(x = economics_uncertainty_index,
+                      y = Repetition_Score,
+                      text = Country)) +
+  geom_point(color = "steelblue", size = 3)
+
+ggplotly(p, tooltip = "text")
