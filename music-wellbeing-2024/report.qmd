@@ -53,9 +53,9 @@ library(ggplot2)
 library(ggthemes)
 library(ggrepel)
 library(corrplot)
-spotify_dataset <- read.csv("Spotify_2024_Global_Streaming_Data.csv")
-happiness_report_2024 <- read.csv("WHR24_Data_Figure_2.1.csv")
-happiness_report_2023  <- read.csv("WHR23_Data_Figure_2.1.csv")
+spotify_dataset <- read.csv("data/Spotify_2024_Global_Streaming_Data.csv")
+happiness_report_2024 <- read.csv("data/WHR24_Data_Figure_2.1.csv")
+happiness_report_2023  <- read.csv("data/WHR23_Data_Figure_2.1.csv")
 ```
 
 2.  Then only relevant columns which were of interest from both reports were selected. These included the total score and the components explained by different factors. Then the columns were renamed to make the datasets easier to work with.
@@ -467,3 +467,4 @@ Palomeque, M., & de-Lucio, J. (2024). The Soundtrack of a Crisis: More Positive 
 Pereira, C. S., Teixeira, J., Figueiredo, P., Xavier, J., Castro, S. L., & Brattico, E. (2011). Music and emotions in the brain: Familiarity matters. PloS One, 6(11), e27241. <https://doi.org/10.1371/journal.pone.0027241>
 
 Spotify Global Streaming Data (2024). (n.d.). Retrieved 3 December 2025, from <https://www.kaggle.com/datasets/atharvasoundankar/spotify-global-streaming-data-2024>
+
