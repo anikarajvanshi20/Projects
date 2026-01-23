@@ -1,5 +1,8 @@
 ---
 title: "Interactive Dashboard"
+format:
+  html:
+    self-contained: true
 ---
 
 ```{r}
@@ -8,9 +11,17 @@ library(plotly)
 
 data <- read.csv("data/final_dataset.csv")
 
-p <- ggplot(data, aes(x = economics_uncertainty_index,
-                      y = Repetition_Score,
-                      text = Country)) +
-  geom_point(color = "steelblue", size = 3)
+p <- ggplot(data, aes(
+  x = economics_uncertainty_index,
+  y = Repetition_Score,
+  text = Country
+)) +
+  geom_point(color = "steelblue", size = 3) +
+  theme_minimal() +
+  labs(
+    title = "Economic Uncertainty vs Repetitive Listening",
+    x = "Economic Uncertainty Index",
+    y = "Repetition Score"
+  )
 
 ggplotly(p, tooltip = "text")
