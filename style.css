@@ -1,1 +1,474 @@
+/* =========================
+   BASE
+========================= */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f5f3ed;
+    color: #20231f;
+    font-family: "DM Sans", sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.navbar {
+    max-width: 1200px;
+    margin: auto;
+    padding: 28px 40px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    font-size: 13px;
+    color: #60645e;
+    transition: color 0.2s ease;
+}
+
+.nav-links a:hover {
+    color: #20231f;
+}
+
+
+/* =========================
+   GENERAL
+========================= */
+
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 40px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: #73776f;
+}
+
+.text-link {
+    display: inline-block;
+    margin-top: 25px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    border-bottom: 1px solid #20231f;
+    padding-bottom: 3px;
+}
+
+.text-link span {
+    margin-left: 7px;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 690px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 90px 0 120px;
+}
+
+.hero-text {
+    max-width: 760px;
+}
+
+.hero h1 {
+    margin-top: 22px;
+
+    font-family: "Playfair Display", serif;
+    font-size: clamp(50px, 7vw, 86px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+}
+
+.hero h1 em {
+    color: #667563;
+    font-style: italic;
+}
+
+.intro {
+    max-width: 570px;
+    margin-top: 32px;
+
+    font-size: 17px;
+    line-height: 1.8;
+    color: #62665f;
+}
+
+
+/* Decorative shape */
+
+.hero-mark {
+    position: relative;
+
+    width: 230px;
+    height: 230px;
+
+    margin-right: 70px;
+}
+
+.circle {
+    position: absolute;
+
+    width: 210px;
+    height: 210px;
+
+    border-radius: 50%;
+
+    background: #dce2d6;
+}
+
+.circle-small {
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: #8b9a87;
+
+    right: -15px;
+    bottom: -10px;
+}
+
+
+/* =========================
+   SECTION HEADINGS
+========================= */
+
+.work-section {
+    padding: 80px 0 140px;
+}
+
+.section-heading {
+    margin-bottom: 55px;
+}
+
+.section-heading h2 {
+    margin-top: 12px;
+
+    font-family: "Playfair Display", serif;
+    font-size: 46px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+
+
+/* =========================
+   PROJECT CARDS
+========================= */
+
+.project-card {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 80px 1fr 60px;
+
+    padding: 42px 0;
+
+    border-top: 1px solid #d4d4cc;
+
+    transition: padding 0.25s ease;
+}
+
+.project-card:last-child {
+    border-bottom: 1px solid #d4d4cc;
+}
+
+.project-card:hover {
+    padding-left: 15px;
+}
+
+.project-number {
+    font-size: 12px;
+    color: #858980;
+}
+
+.project-content {
+    max-width: 690px;
+}
+
+.project-type {
+    margin-bottom: 13px;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+
+    color: #73776f;
+}
+
+.project-content h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 37px;
+    line-height: 1.15;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+
+.project-content > p:not(.project-type) {
+    max-width: 600px;
+    margin-top: 18px;
+
+    color: #696d66;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.project-link {
+    display: inline-block;
+    margin-top: 20px;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.project-arrow {
+    align-self: center;
+
+    font-size: 25px;
+    color: #777d73;
+
+    transition: transform 0.25s ease;
+}
+
+.project-card:hover .project-arrow {
+    transform: translate(5px, -5px);
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-section {
+    padding: 120px 0 140px;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 100px;
+}
+
+.about-large {
+    font-family: "Playfair Display", serif;
+    font-size: 43px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+}
+
+.about-large em {
+    color: #667563;
+}
+
+.about-text {
+    max-width: 480px;
+}
+
+.about-text p {
+    margin-bottom: 22px;
+
+    font-size: 15px;
+    line-height: 1.9;
+    color: #666a63;
+}
+
+
+/* =========================
+   TOOLS
+========================= */
+
+.tools-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    padding: 70px 0;
+
+    border-top: 1px solid #d4d4cc;
+    border-bottom: 1px solid #d4d4cc;
+}
+
+.tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tools-list span {
+    padding: 8px 13px;
+
+    border: 1px solid #cfd2c9;
+    border-radius: 30px;
+
+    font-size: 12px;
+    color: #656a62;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    max-width: 1200px;
+    margin: auto;
+
+    padding: 45px 40px 35px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+}
+
+.footer-name {
+    font-family: "Playfair Display", serif;
+    font-size: 20px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.footer-links a {
+    font-size: 12px;
+    color: #666a63;
+}
+
+.copyright {
+    text-align: right;
+
+    font-size: 11px;
+    color: #858980;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+    .navbar {
+        padding: 24px 22px;
+    }
+
+    .nav-links {
+        gap: 16px;
+    }
+
+    .nav-links a {
+        font-size: 11px;
+    }
+
+    main {
+        padding: 0 22px;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 100px 0 120px;
+    }
+
+    .hero h1 {
+        font-size: 54px;
+    }
+
+    .intro {
+        font-size: 15px;
+    }
+
+    .hero-mark {
+        display: none;
+    }
+
+    .section-heading h2 {
+        font-size: 38px;
+    }
+
+    .project-card {
+        grid-template-columns: 45px 1fr 25px;
+        padding: 35px 0;
+    }
+
+    .project-content h3 {
+        font-size: 29px;
+    }
+
+    .project-content > p:not(.project-type) {
+        font-size: 13px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 45px;
+    }
+
+    .about-large {
+        font-size: 35px;
+    }
+
+    .tools-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    footer {
+        padding: 40px 22px;
+
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .footer-links {
+        justify-content: flex-start;
+    }
+
+    .copyright {
+        text-align: left;
+    }
+}
