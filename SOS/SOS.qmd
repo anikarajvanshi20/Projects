@@ -1,0 +1,358 @@
+---
+title: "SOS Leh Analysis"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+pre_workshop <- read.csv("Science of Sadharan (Responses).csv")
+post_workshop <- read.csv("Science of Sadharan Form 2 (Responses).csv")
+
+library(dplyr)
+library(ggplot2)
+library(psych)
+
+```
+
+```{r}
+pre_workshop <- pre_workshop %>%
+  mutate(across(where(is.character), ~na_if(., "")))
+
+post_workshop <- post_workshop %>%
+  mutate(across(where(is.character), ~na_if(., "")))
+
+career_dataset <- pre_workshop %>% 
+  rename(class = Grade.Class, 
+         school = School.Name,
+         cq1 = I.would.like.to.have.a.career.in.1,
+         cq2 = I.would.enjoy.a.career.in.1,
+         cq3 = I.will.go.to.a.good.college.and.study.for.a.career.in.1, 
+         cq4 = I.will.have.a.successful.professional.career.and.make.substantial.scientific.contributions.,
+         cq5 = Some.day.when.I.tell.others.about.my.career..they.will.respect.me.for.doing.scientific.work.,
+         cq6 = A.career.in.1.would.allow.me.to.work.with.others.in.meaningful.ways.) %>% 
+  select(Name, Age, Gender, class, school,cq1, cq2, cq3, cq4, cq5, cq6)
+
+career_dataset$Gender <- as.factor(career_dataset$Gender)
+```
+
+```{r}
+career_dataset$cq1 <- reverse.code(keys = -1, items = career_dataset$cq1)
+
+career_dataset$cq2 <- reverse.code(keys = -1, items = career_dataset$cq2)
+
+career_dataset$cq3 <- reverse.code(keys = -1, items = career_dataset$cq3)
+
+career_dataset$cq4 <- reverse.code(keys = -1, items = career_dataset$cq4)
+
+career_dataset$cq5 <- reverse.code(keys = -1, items = career_dataset$cq5)
+
+career_dataset$cq6 <- reverse.code(keys = -1, items = career_dataset$cq6)
+
+```
+
+```{r}
+career_dataset <- career_dataset %>% 
+  rowwise() %>% 
+  mutate(mean_score = mean(c_across(cq1:cq6), na.rm = TRUE)) %>%
+  ungroup() %>% 
+  mutate(group = "Pre") %>% 
+  mutate(row_num = row_number())
+
+```
+
+```{r}
+
+SC_dataset <- pre_workshop %>% 
+  rename(class = Grade.Class, 
+         school = School.Name,
+         sc1 = My.family.has.encouraged.me.to.study.1,
+         sc3 = Do.you.think.learning.1.is.important.for.your.daily.life.,
+         sc4 = How.do.you.feel.when.you.learn.about.science.in.school.) %>% 
+  select(Name, Age, Gender, class, school,sc1, sc3, sc4)
+
+SC_dataset$Gender <- as.factor(SC_dataset$Gender)
+
+
+
+```
+
+```{r}
+SC_dataset$sc4 <- recode(SC_dataset$sc4,
+  "Bored" = 4,
+  "Confused" = 3,
+  "Curious" = 2,
+  "Excited" = 1,
+  "Good" = 1)
+sum(is.na(SC_dataset$sc3))
+sum(is.na(SC_dataset$sc4))
+```
+
+```{r}
+SC_dataset$sc1 <- reverse.code(keys = -1, items = SC_dataset$sc1)
+
+SC_dataset$sc3 <- reverse.code(keys = -1, items = SC_dataset$sc3)
+
+SC_dataset$sc4 <- reverse.code(keys = -1, items = SC_dataset$sc4)
+```
+
+```{r}
+SC_dataset <- SC_dataset %>% 
+  rowwise() %>% 
+  mutate(mean_score = mean(c_across(sc1:sc4), na.rm = TRUE)) %>%
+  ungroup() %>% 
+  mutate(group = "Pre") %>% 
+  mutate(row_num = row_number())
+
+joined_pre <- full_join(career_dataset, SC_dataset, by = c("Name", "Age", "Gender", "class", "group", "school","row_num")) 
+
+joined_pre <- joined_pre %>% 
+  select(row_num, Name, Age, Gender, class, school,mean_score.x, mean_score.y, group) %>% 
+  rename(CI = mean_score.x, 
+         SCI = mean_score.y)
+  
+```
+
+```{r}
+career_dataset2 <- post_workshop %>% 
+  rename(class = Grade.Class, 
+         school = School.Name.,
+         CI = How.has.this.workshop.influenced.your.thoughts.on.pursuing.a.career.in.science.or.another.related.field.) %>% 
+  mutate(row_num = row_number()) %>% 
+  select(row_num, Name, Age, Gender, class, school, CI) %>% 
+  mutate(group = "Post")
+
+career_dataset2$Gender <- as.factor(career_dataset2$Gender)
+career_dataset2$CI <- reverse.code(keys = -1, items = career_dataset2$CI)
+```
+
+```{r}
+sc_dataset2 <- post_workshop %>% 
+  rename(class = Grade.Class, 
+         school = School.Name., 
+         s1 = How.often.will.you.think.about.science.now.after.this.workshop.,
+         s2 = Did.the.workshop.make.you.more.interested.in.learning.about.how.things.work.) %>% 
+  mutate(row_num = row_number()) %>% 
+  select(row_num, Name, Age, Gender, class, school, s1, s2)
+  
+sc_dataset2$Gender <- as.factor(sc_dataset2$Gender)
+
+sc_dataset2$s1[sc_dataset2$s1 == 5] <- 4
+
+sc_dataset2$s1 <- reverse.code(keys = -1, items = sc_dataset2$s1)
+sc_dataset2$s2 <- reverse.code(keys = -1, items = sc_dataset2$s2)
+
+sc_dataset2 <- sc_dataset2 %>% 
+  rowwise() %>% 
+  mutate(SCI = mean(c_across(s1:s2), na.rm = TRUE)) %>%
+  ungroup() %>% 
+  mutate(group = "Post") %>% 
+  mutate(row_num = row_number())
+
+joined_post <- full_join(career_dataset2, sc_dataset2, by = c("Name", "Age", "Gender", "class", "group", "school","row_num")) 
+
+joined_post <- joined_post %>% 
+  select(row_num, Name, Age, Gender, class, school, CI, SCI, group)
+
+```
+
+```{r}
+combined <- bind_rows(joined_pre, joined_post)
+combined$group <- factor(combined$group, levels = c("Pre", "Post"))
+```
+
+```{r}
+sum(is.na(combined$CI))
+sum(is.na(combined$SCI))
+mean_sd <- combined %>%
+  group_by(group) %>%
+  summarise(mean_SCI = mean(SCI, na.rm = T), 
+            mean_CI = mean(CI, na.rm = T),
+            SD_SCI = sd(SCI, na.rm = T),
+            SD_CI = sd(CI, na.rm = T))
+mean_sd
+```
+
+```{r}
+shapiro.test(combined$CI)
+shapiro.test(combined$SCI)
+
+write.csv(combined, "my_data.csv")
+
+```
+
+```{r}
+combined %>% 
+  group_by(class) %>% 
+  summarise(n())
+
+
+```
+
+```{r}
+combined$class <- as.numeric(gsub("\\D", "",combined$class))
+
+combined %>% 
+  group_by(class) %>% 
+  summarise(n())
+```
+
+```{r}
+combined$school[combined$school == 12] <- NA
+combined$school[combined$school %in% c("G.M.H.S. Lankore", 
+                                       "GMHS Lankore", 
+                                       "GMHS Lankore, Kargi;", 
+                                       "PM Shiri GMHS ")] <- "GMHS"
+
+combined$school[combined$school == "GMHS Lankore "] <- "GMHS"
+
+combined %>% 
+  group_by(school) %>% 
+  summarise(n())
+```
+
+```{r}
+combined$school[combined$school %in% c("IMS ", 
+                                       "IMS Chochut", 
+                                       "Imamiya", 
+                                       "Imamiya Mission School",
+                                       "Ims",
+                                       "Smamiya Mission School",
+                                       "Imamiya Public School")] <- "IMS"
+
+combined$school[combined$school %in% c("Jamyang ", 
+                                       "Jamyang", 
+                                       "Jamyang High School", 
+                                       "Jamyang High School ",
+                                       "Jamyang High School - Leh",
+                                       "Jamyang High school",
+                                       "Jamyang School",
+                                       "Jamyang School, Leh",
+                                       "Jamyang  High School",
+                                       "Jamyang High school ")] <- "JHS"
+combined$school[combined$school == "Jamyang  High School "] <- "JHS"
+
+combined$school[combined$school %in% c("NMCE", 
+                                       "Millenium", 
+                                       "NMCS ", 
+                                       "New Millennium ",
+                                       "Ims")] <- "NMCS"
+
+combined %>% 
+  group_by(school) %>% 
+  summarise(n())
+
+combined$school[combined$school == "SB"] <- "IMS"
+
+```
+
+```{r}
+write.csv(combined, "my_data_final.csv")
+```
+
+```{r}
+combined$Age <- as.factor(combined$Age)
+combined$class <- as.factor(combined$class)
+combined$school <- as.factor(combined$school)
+combined$CI <- as.numeric(combined$CI)
+combined$SCI <- as.numeric(combined$SCI)
+glimpse(combined)
+```
+
+```{r}
+combined %>% 
+  group_by(group, Gender) %>% 
+  summarise(Mean_SCI = mean(SCI, na.rm = T),
+            median_SCI = median(SCI, na.rm = T),
+            IQR_SCI = IQR(SCI, na.rm = T),
+            Mean_CI = mean(CI, na.rm = T),
+            median_CI = median(CI, na.rm = T),
+            IQR_CI = IQR(CI, na.rm = T))
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(ARTool)
+```
+
+```{r}
+kruskal.test(SCI ~ interaction(group, school), data = combined)
+kruskal.test(CI ~ interaction(group, school), data = combined)
+```
+
+```{r}
+ggplot(data = combined) + geom_bar(mapping = aes(y = CI, group = group))
+
+```
+
+```{r}
+ggplot(combined, aes(x = group, y = CI, fill = group)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Career Inclination: Pre vs Post Workshop",
+       x = "Workshop Phase", y = "Career Inclination (Index)") +
+  theme_minimal()
+
+# Violin plot
+ggplot(combined, aes(x = group, y = SCI, fill = group)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(title = "Scientific Curiosity: Pre vs Post Workshop",
+       x = "Workshop Phase", y = "Scientific Curiosity (Index)") +
+  theme_minimal() 
+```
+
+```{r}
+summary <- combined %>% 
+  group_by(group, Gender) %>% 
+  summarise(mean_CI = mean(CI, na.rm = T),
+            sd_CI = sd(CI, na.rm = T),
+            mean_SCI = mean(SCI, na.rm = T),
+            sd_SCI = sd(SCI, na.rm = T)) %>% 
+  filter(!is.na(Gender))
+
+
+ggplot(summary, aes(x = group, y = mean_CI, color = Gender, group = Gender)) +
+  geom_point(size = 3) +
+  geom_line(linewidth = 1) +
+  labs(title = "Interaction: Workshop × Gender on Career Inclination",
+       x = "Workshop Phase", y = "Career Inclination (Index)") +
+  theme_minimal() 
+```
+
+```{r}
+ggplot(summary, aes(x = group, y = mean_SCI, color = Gender, group = Gender)) +
+  geom_point(size = 3) +
+  geom_line(linewidth = 1) +
+  labs(title = "Interaction: Workshop × Gender on SCI",
+       x = "Workshop Phase", y = "Scientific Curiosity (Index)") +
+  theme_minimal() 
+```
+
+```{r}
+combined_new <- combined %>% 
+  filter(!is.na(Gender), !is.na(CI), !is.na(SCI))
+  
+art_model <- art(SCI ~ group * Gender, data = combined_new)
+```
