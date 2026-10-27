@@ -1,542 +1,159 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Anika Rajvanshi | Academic Projects</title>
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#241b20">
+  <meta name="description" content="Anika Rajvanshi's portfolio of behavioural research, computational neuroscience and data analysis projects.">
+  <meta property="og:title" content="Anika Rajvanshi — Research & Data">
+  <meta property="og:description" content="Behavioural research, computational neuroscience and applied data analysis.">
+  <meta property="og:type" content="website">
+  <title>Anika Rajvanshi — Research & Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Navigation -->
+  <nav class="nav" aria-label="Main navigation">
+    <a class="brand" href="#top" aria-label="Anika Rajvanshi, home"><span class="brand-mark">AR</span><span>Anika Rajvanshi</span></a>
+    <div class="nav-links">
+      <a href="#projects">Selected work</a>
+      <a href="#approach">Methods</a>
+      <a href="https://www.linkedin.com/in/anika-rajvanshi/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      <a class="nav-contact" href="mailto:anikarajvanshi20@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
+    </div>
+  </nav>
 
-    <nav class="nav">
-
-        <a href="#" class="name">
-            Anika Rajvanshi
-        </a>
-
-        <div class="nav-right">
-
-            <a href="#projects">
-                Projects
-            </a>
-
-            <a href="#methods">
-                Methods
-            </a>
-
-            <a
-                href="https://www.linkedin.com/in/anika-rajvanshi/"
-                target="_blank"
-                rel="noopener noreferrer">
-                LinkedIn
-            </a>
-
-            <a href="mailto:anikarajvanshi20@gmail.com">
-                Contact
-            </a>
-
-            <button
-                id="theme-toggle"
-                aria-label="Toggle dark mode">
-                ◐
-            </button>
-
+  <header class="hero" id="top">
+    <canvas class="hero-canvas" id="network-canvas" aria-hidden="true"></canvas>
+    <div class="hero-grain" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot"></span> PSYCHOLOGY · BIOLOGY · COMPUTATIONAL RESEARCH</p>
+        <h1>Human behaviour,<br>seen through <em>evidence.</em></h1>
+        <p class="hero-description">I’m a Psychology student at Ashoka University working across behavioural research, computational neuroscience and applied data analysis.</p>
+        <p class="hero-credential">BSc (Hons) Psychology <span>/</span> Biology minor</p>
+        <div class="hero-actions">
+          <a class="button button-light" href="#projects">Explore selected work <span aria-hidden="true">↓</span></a>
+          <a class="button button-quiet" href="https://github.com/anikarajvanshi20/Projects" target="_blank" rel="noopener noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
         </div>
+      </div>
 
-    </nav>
-
-
-    <!-- Hero -->
-
-    <header class="hero">
-
-        <p class="eyebrow">
-            ACADEMIC PROJECTS · RESEARCH · DATA
-        </p>
-
-        <h1>
-            Psychology, neuroscience<br>
-            & computational research.
-        </h1>
-
-        <p class="intro">
-            A collection of academic, independent and mentored work
-            exploring human behaviour, cognition and scientific questions
-            through data analysis and computational methods.
-        </p>
-
-        <div class="hero-links">
-
-            <a
-                href="#projects"
-                class="primary-button">
-                Explore projects
-            </a>
-
-            <a
-                href="https://github.com/anikarajvanshi20/Projects"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-link">
-                GitHub →
-            </a>
-
-            <a
-                href="https://www.linkedin.com/in/anika-rajvanshi/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-link">
-                LinkedIn →
-            </a>
-
+      <aside class="hero-visual" aria-label="Research approach: question, evidence, interpretation">
+        <div class="visual-header"><span>THE RESEARCH THREAD</span><span class="visual-index">01 — 03</span></div>
+        <div class="visual-flow">
+          <div class="flow-line" aria-hidden="true"><span></span><span></span></div>
+          <div class="flow-node"><span class="node-number">01</span><div><strong>Question</strong><small>What are we trying to understand?</small></div><span class="node-symbol" aria-hidden="true">↗</span></div>
+          <div class="flow-node"><span class="node-number">02</span><div><strong>Evidence</strong><small>What can the data tell us?</small></div><span class="node-symbol" aria-hidden="true">⌁</span></div>
+          <div class="flow-node"><span class="node-number">03</span><div><strong>Interpretation</strong><small>What does it mean—and not mean?</small></div><span class="node-symbol" aria-hidden="true">＋</span></div>
         </div>
+        <p class="visual-footnote">Method follows the question.</p>
+      </aside>
+    </div>
+    <div class="hero-bottom"><span>RESEARCH PORTFOLIO</span><span>INDEPENDENT · ACADEMIC · MENTORED WORK</span></div>
+  </header>
 
-    </header>
-
-
-    <!-- Projects -->
-
-    <main id="projects">
-
-        <div class="section-heading">
-
-            <span>01</span>
-
-            <h2>
-                Selected projects
-            </h2>
-
+  <main id="main">
+    <section class="work-section" id="projects" aria-labelledby="projects-title">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">01 / SELECTED WORK</p>
+          <h2 id="projects-title">Projects with a question<br class="mobile-break"> at the centre.</h2>
         </div>
+        <p class="section-summary">From cross-national data to learning models, each project starts with a problem worth examining.</p>
+      </div>
 
+      <div class="filters" role="group" aria-label="Filter projects by area">
+        <button class="filter-chip is-active" type="button" data-filter="all" aria-pressed="true">All work <span>04</span></button>
+        <button class="filter-chip" type="button" data-filter="society" aria-pressed="false">Behaviour & society</button>
+        <button class="filter-chip" type="button" data-filter="neuroscience" aria-pressed="false">Neuroscience</button>
+        <button class="filter-chip" type="button" data-filter="machine-learning" aria-pressed="false">Machine learning</button>
+        <span class="filter-status" id="filter-status" aria-live="polite"></span>
+      </div>
 
-        <!-- PROJECT 1 -->
-
-        <article class="project featured">
-
-            <div class="project-number">
-                01
+      <div class="project-grid" id="project-grid">
+        <article class="project-card project-featured" data-category="society">
+          <div class="featured-main">
+            <div class="card-topline"><span class="project-category"><span class="category-dot dot-rose"></span> CROSS-NATIONAL DATA ANALYSIS</span><span class="project-index">01</span></div>
+            <h3>National Well-Being &amp;<br>Global Music Consumption</h3>
+            <p>Explores how economic uncertainty and social support relate to music consumption across 20 countries, combining Spotify streaming data with the World Happiness Report.</p>
+            <div class="tag-row"><span>R</span><span>Data analysis</span><span>ggplot2</span><span>Visualisation</span></div>
+            <a class="text-arrow" href="https://anikarajvanshi20.github.io/National-Well-being-and-Global-Music-Consumption/" target="_blank" rel="noopener noreferrer">View research project <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="featured-visual" aria-label="Project at a glance: 20 countries, Spotify data and World Happiness Report">
+            <div class="mini-chart-label">PROJECT AT A GLANCE</div>
+            <div class="mini-chart-number">20<span> countries in scope</span></div>
+            <div class="source-list">
+              <div class="source-item"><span class="source-number">01</span><div><strong>Spotify</strong><small>Streaming data</small></div></div>
+              <div class="source-item"><span class="source-number">02</span><div><strong>World Happiness Report</strong><small>Well-being indicators</small></div></div>
             </div>
-
-            <div class="project-content">
-
-                <p class="project-type">
-                    CROSS-NATIONAL DATA ANALYSIS
-                </p>
-
-                <h3>
-                    National Well-Being & Global Music Consumption
-                </h3>
-
-                <p>
-                    Examining how economic uncertainty and social support
-                    relate to music consumption patterns across 20 countries,
-                    using Spotify streaming data and the World Happiness Report.
-                </p>
-
-                <div class="tags">
-
-                    <span>R</span>
-                    <span>Data Analysis</span>
-                    <span>ggplot2</span>
-                    <span>Visualization</span>
-
-                </div>
-
-                <a
-                    href="https://anikarajvanshi20.github.io/National-Well-being-and-Global-Music-Consumption/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-link">
-
-                    View research project →
-
-                </a>
-
-            </div>
-
+            <p class="visual-caption">Two data sources.<br>One cross-national question.</p>
+          </div>
         </article>
 
-
-        <!-- PROJECT 2 -->
-
-        <article class="project">
-
-            <div class="project-number">
-                02
-            </div>
-
-            <div class="project-content">
-
-                <p class="project-type">
-                    RESEARCH DATA ANALYSIS
-                </p>
-
-                <h3>
-                    Scientific Curiosity & Career Inclination
-                </h3>
-
-                <p>
-                    Analysis of 500+ observations from students in Classes
-                    6–8, examining patterns in scientific curiosity and
-                    career inclination in Kashmir.
-                </p>
-
-                <div class="tags">
-
-                    <span>R</span>
-                    <span>Survey Analysis</span>
-                    <span>Data Cleaning</span>
-                    <span>Visualization</span>
-
-                </div>
-
-                <!-- CHANGE THIS LINK TO YOUR ACTUAL PROJECT PATH -->
-
-                <a
-                    href="R_programming/Science_of_Sadharan/"
-                    class="project-link">
-
-                    View analysis →
-
-                </a>
-
-            </div>
-
+        <article class="project-card" data-category="society">
+          <div class="card-topline"><span class="project-category"><span class="category-dot dot-ochre"></span> FIELD-LINKED RESEARCH</span><span class="project-index">02</span></div>
+          <h3>Scientific Curiosity &amp;<br>Career Inclination</h3>
+          <p>Analysis of 500+ observations from students in Classes 6–8, examining patterns in scientific curiosity and career inclination in Kashmir.</p>
+          <div class="tag-row"><span>R</span><span>Survey analysis</span><span>Data cleaning</span></div>
+          <a class="text-arrow" href="https://github.com/anikarajvanshi20/Projects/tree/main/SOS" target="_blank" rel="noopener noreferrer">Browse project files <span aria-hidden="true">↗</span></a>
         </article>
 
-
-        <!-- PROJECT 3 -->
-
-        <article class="project">
-
-            <div class="project-number">
-                03
-            </div>
-
-            <div class="project-content">
-
-                <p class="project-type">
-                    COMPUTATIONAL NEUROSCIENCE
-                </p>
-
-                <h3>
-                    Modelling Hebbian Learning
-                </h3>
-
-                <p>
-                    A computational exploration of Hebbian learning,
-                    neural plasticity and mechanisms underlying learning
-                    and memory.
-                </p>
-
-                <div class="tags">
-
-                    <span>Python</span>
-                    <span>Jupyter</span>
-                    <span>Neuroscience</span>
-                    <span>Modelling</span>
-
-                </div>
-
-                <a
-                    href="Computational_Neuroscience/"
-                    class="project-link">
-
-                    View project →
-
-                </a>
-
-            </div>
-
+        <article class="project-card" data-category="neuroscience">
+          <div class="card-topline"><span class="project-category"><span class="category-dot dot-plum"></span> COMPUTATIONAL NEUROSCIENCE</span><span class="project-index">03</span></div>
+          <h3>Modelling Hebbian Learning</h3>
+          <p>A computational exploration of Hebbian learning, neural plasticity and mechanisms underlying learning and memory.</p>
+          <div class="tag-row"><span>Python</span><span>Jupyter</span><span>Modelling</span></div>
+          <a class="text-arrow" href="https://github.com/anikarajvanshi20/Projects/tree/main/Computational_Neuroscience" target="_blank" rel="noopener noreferrer">Explore the model <span aria-hidden="true">↗</span></a>
         </article>
 
-
-        <!-- PROJECT 4 -->
-
-        <article class="project">
-
-            <div class="project-number">
-                04
+        <article class="project-card project-ml" data-category="machine-learning">
+          <div class="card-topline"><span class="project-category"><span class="category-dot dot-charcoal"></span> APPLIED MACHINE LEARNING</span><span class="project-index">04</span></div>
+          <h3>Statistical &amp; Machine Learning</h3>
+          <p>Five applied models across image classification, sales forecasting, survival prediction, sentiment analysis and housing prediction.</p>
+          <div class="tag-row"><span>Python</span><span>Regression</span><span>Neural networks</span></div>
+          <details class="notebook-list">
+            <summary><span>Explore the five notebooks</span><span class="summary-icon" aria-hidden="true">＋</span></summary>
+            <div class="notebook-links">
+              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Anika_Classification_NN_FashionMNIST.ipynb" target="_blank" rel="noopener noreferrer"><span>FashionMNIST Classification</span><span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Linear_Regression_Walmart_Sales.ipynb" target="_blank" rel="noopener noreferrer"><span>Walmart Sales Prediction</span><span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Logistic_Regression_Titanic.ipynb" target="_blank" rel="noopener noreferrer"><span>Titanic Survival Analysis</span><span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Multi_Modal_sentiment_analysis.ipynb" target="_blank" rel="noopener noreferrer"><span>Multimodal Sentiment Analysis</span><span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Regression_NN_California.ipynb" target="_blank" rel="noopener noreferrer"><span>California Housing Prediction</span><span aria-hidden="true">↗</span></a>
             </div>
-
-            <div class="project-content">
-
-                <p class="project-type">
-                    MACHINE LEARNING
-                </p>
-
-                <h3>
-                    Statistical & Machine Learning
-                </h3>
-
-                <p>
-                    Applied modelling projects covering classification,
-                    regression, neural networks and multimodal sentiment
-                    analysis.
-                </p>
-
-
-                <!-- INDIVIDUAL ML PROJECTS -->
-
-                <div class="ml-projects">
-
-
-                    <a
-                        href="Machine_Learning/Anika_Classification_NN_FashionMNIST.ipynb">
-
-                        <strong>
-                            FashionMNIST Classification
-                        </strong>
-
-                        <span>
-                            Neural network for image classification →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="Machine_Learning/Linear_Regression_Walmart_Sales.ipynb">
-
-                        <strong>
-                            Walmart Sales Prediction
-                        </strong>
-
-                        <span>
-                            Linear regression for retail sales forecasting →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="Machine_Learning/Logistic_Regression_Titanic.ipynb">
-
-                        <strong>
-                            Titanic Survival Analysis
-                        </strong>
-
-                        <span>
-                            Logistic regression and feature analysis →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="Machine_Learning/Multi_Modal_sentiment_analysis.ipynb">
-
-                        <strong>
-                            Multimodal Sentiment Analysis
-                        </strong>
-
-                        <span>
-                            Combining linguistic and multimodal features →
-                        </span>
-
-                    </a>
-
-
-                    <a
-                        href="Machine_Learning/Regression_NN_California.ipynb">
-
-                        <strong>
-                            California Housing Prediction
-                        </strong>
-
-                        <span>
-                            Neural network regression and model comparison →
-                        </span>
-
-                    </a>
-
-
-                </div>
-
-            </div>
-
+          </details>
         </article>
-
-    </main>
-
-
-    <!-- Methods -->
-
-    <section
-        id="methods"
-        class="methods">
-
-        <div class="section-heading">
-
-            <span>02</span>
-
-            <h2>
-                Research methods
-            </h2>
-
-        </div>
-
-
-        <div class="methods-grid">
-
-
-            <div>
-
-                <h4>
-                    Programming
-                </h4>
-
-                <p>
-                    R · Python · Jupyter
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4>
-                    Data
-                </h4>
-
-                <p>
-                    Data cleaning · Statistical analysis · Modelling
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4>
-                    Visualisation
-                </h4>
-
-                <p>
-                    ggplot2 · matplotlib · Plotly
-                </p>
-
-            </div>
-
-
-            <div>
-
-                <h4>
-                    Research
-                </h4>
-
-                <p>
-                    Experimental design · Survey research · Computational methods
-                </p>
-
-            </div>
-
-
-        </div>
-
+      </div>
     </section>
 
+    <section class="approach-section" id="approach" aria-labelledby="approach-title">
+      <div class="approach-intro">
+        <p class="section-kicker">02 / METHODS &amp; TOOLS</p>
+        <h2 id="approach-title">The tools are useful.<br><em>The question comes first.</em></h2>
+      </div>
+      <div class="method-list">
+        <div class="method-row"><span class="method-number">01</span><h3>Research</h3><p>Experimental design · Survey research</p></div>
+        <div class="method-row"><span class="method-number">02</span><h3>Analysis</h3><p>Data cleaning · Statistical analysis · Modelling</p></div>
+        <div class="method-row"><span class="method-number">03</span><h3>Tools</h3><p>R · Python · Jupyter</p></div>
+        <div class="method-row"><span class="method-number">04</span><h3>Visualisation</h3><p>ggplot2 · matplotlib · Plotly</p></div>
+      </div>
+    </section>
 
-    <!-- Footer -->
+    <section class="contact-strip" id="contact" aria-labelledby="contact-title">
+      <div><p class="section-kicker">NEXT CONVERSATION</p><h2 id="contact-title">Good questions lead<br>to better work.</h2></div>
+      <a class="button button-dark" href="mailto:anikarajvanshi20@gmail.com">Email Anika <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
 
-    <footer>
-
-        <div>
-
-            <strong>
-                Anika Rajvanshi
-            </strong>
-
-            <span>
-                Psychology · Biology · Computational Research
-            </span>
-
-        </div>
-
-
-        <div class="footer-links">
-
-            <a
-                href="https://github.com/anikarajvanshi20/Projects"
-                target="_blank"
-                rel="noopener noreferrer">
-
-                GitHub
-
-            </a>
-
-
-            <a
-                href="https://www.linkedin.com/in/anika-rajvanshi/"
-                target="_blank"
-                rel="noopener noreferrer">
-
-                LinkedIn
-
-            </a>
-
-
-            <a href="mailto:anikarajvanshi20@gmail.com">
-
-                Email
-
-            </a>
-
-        </div>
-
-    </footer>
-
-
-    <!-- Dark Mode -->
-
-    <script>
-
-        const toggle =
-            document.getElementById("theme-toggle");
-
-
-        toggle.addEventListener("click", () => {
-
-            document.body.classList.toggle("dark");
-
-
-            if (
-                document.body.classList.contains("dark")
-            ) {
-
-                localStorage.setItem(
-                    "theme",
-                    "dark"
-                );
-
-            } else {
-
-                localStorage.setItem(
-                    "theme",
-                    "light"
-                );
-
-            }
-
-        });
-
-
-        if (
-            localStorage.getItem("theme") === "dark"
-        ) {
-
-            document.body.classList.add("dark");
-
-        }
-
-    </script>
-
+  <footer class="footer">
+    <span>© <span id="year">2026</span> Anika Rajvanshi</span>
+    <span class="footer-note">Built around curiosity, evidence and careful interpretation.</span>
+    <div class="footer-links"><a href="https://github.com/anikarajvanshi20/Projects" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/anika-rajvanshi/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
+  </footer>
 </body>
-
 </html>
