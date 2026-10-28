@@ -1,159 +1,784 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#241b20">
-  <meta name="description" content="Anika Rajvanshi's portfolio of behavioural research, computational neuroscience and data analysis projects.">
-  <meta property="og:title" content="Anika Rajvanshi — Research & Data">
-  <meta property="og:description" content="Behavioural research, computational neuroscience and applied data analysis.">
-  <meta property="og:type" content="website">
-  <title>Anika Rajvanshi — Research & Data</title>
+  <title>Anika Rajvanshi — Quantitative Research & Data Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=2">
-<script src="./script.js?v=2" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #fafafa;
+      --bg-surface: #ffffff;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-subtle: #64748b;
+      --border-color: #e2e8f0;
+      --accent: #881337;
+      --accent-hover: #9f1239;
+      --accent-soft: rgba(136, 19, 55, 0.06);
+      --badge-bg: #f1f5f9;
+      --badge-text: #334155;
+      --canvas-particle: rgba(136, 19, 55, 0.45);
+      --canvas-line: rgba(136, 19, 55, 0.15);
+      --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      --max-w: 1080px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0b0f19;
+      --bg-surface: #111827;
+      --bg-card: #161e2e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --border-color: #1e293b;
+      --accent: #fb7185;
+      --accent-hover: #fda4af;
+      --accent-soft: rgba(251, 113, 133, 0.1);
+      --badge-bg: #1e293b;
+      --badge-text: #cbd5e1;
+      --canvas-particle: rgba(251, 113, 133, 0.5);
+      --canvas-line: rgba(251, 113, 133, 0.18);
+      --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    #network-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text-main);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-avatar {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #ffffff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 13px;
+      transition: var(--transition);
+    }
+    .nav-link:hover { color: var(--accent); }
+    .theme-toggle {
+      background: var(--badge-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      transition: var(--transition);
+    }
+    .theme-toggle:hover { border-color: var(--accent); }
+
+    header.hero {
+      padding: 44px 0 32px;
+      max-width: 840px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .hero-eyebrow::before {
+      content: "";
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 3.8vw, 36px);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .btn-secondary {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .chips { display: flex; gap: 8px; }
+    .chip {
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .chip.active, .chip:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .project-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+    .project-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .project-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .project-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .tag {
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .project-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .project-link:hover { text-decoration: underline; }
+
+    .notebook-list {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .notebook-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 4px 0;
+      transition: var(--transition);
+    }
+    .notebook-item:hover { color: var(--accent); }
+    .notebook-item span:last-child {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .glance-box {
+      background: var(--badge-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .glance-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-subtle);
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+    .stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .data-flow-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px solid var(--border-color);
+      font-size: 12px;
+    }
+    .flow-index {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .skills-section {
+      padding: 36px 0;
+      border-top: 1px solid var(--border-color);
+      margin-bottom: 40px;
+    }
+    .skills-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .skills-section p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .skill-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .skill-category h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      max-width: 620px;
+      width: 100%;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0 36px;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-subtle);
+      font-size: 12px;
+    }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .projects-grid, .skills-grid { grid-template-columns: 1fr; }
+      .project-card.featured { grid-template-columns: 1fr; }
+      header.hero { padding: 28px 0 20px; }
+    }
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
 
-  <nav class="nav" aria-label="Main navigation">
-    <a class="brand" href="#top" aria-label="Anika Rajvanshi, home"><span class="brand-mark">AR</span><span>Anika Rajvanshi</span></a>
-    <div class="nav-links">
-      <a href="#projects">Selected work</a>
-      <a href="#approach">Methods</a>
-      <a href="https://www.linkedin.com/in/anika-rajvanshi/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
-      <a class="nav-contact" href="mailto:anikarajvanshi20@gmail.com">Get in touch <span aria-hidden="true">↗</span></a>
-    </div>
-  </nav>
+  <canvas id="network-canvas"></canvas>
 
-  <header class="hero" id="top">
-    <canvas class="hero-canvas" id="network-canvas" aria-hidden="true"></canvas>
-    <div class="hero-grain" aria-hidden="true"></div>
-    <div class="hero-inner">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot"></span> PSYCHOLOGY · BIOLOGY · COMPUTATIONAL RESEARCH</p>
-        <h1>Human behaviour,<br>seen through <em>evidence.</em></h1>
-        <p class="hero-description">I’m a Psychology student at Ashoka University working across behavioural research, computational neuroscience and applied data analysis.</p>
-        <p class="hero-credential">BSc (Hons) Psychology <span>/</span> Biology minor</p>
-        <div class="hero-actions">
-          <a class="button button-light" href="#projects">Explore selected work <span aria-hidden="true">↓</span></a>
-          <a class="button button-quiet" href="https://github.com/anikarajvanshi20/Projects" target="_blank" rel="noopener noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
-        </div>
+  <div class="wrapper">
+    <nav>
+      <a href="#top" class="brand">
+        <div class="brand-avatar">AR</div>
+        <span>Anika Rajvanshi</span>
+      </a>
+      <div class="nav-actions">
+        <a href="#projects" class="nav-link">Selected Work</a>
+        <a href="#skills" class="nav-link">Toolkit</a>
+        <a href="https://github.com/anikarajvanshi20" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">
+          <span id="theme-icon">🌙</span> Dark Mode
+        </button>
       </div>
+    </nav>
 
-      <aside class="hero-visual" aria-label="Research approach: question, evidence, interpretation">
-        <div class="visual-header"><span>THE RESEARCH THREAD</span><span class="visual-index">01 — 03</span></div>
-        <div class="visual-flow">
-          <div class="flow-line" aria-hidden="true"><span></span><span></span></div>
-          <div class="flow-node"><span class="node-number">01</span><div><strong>Question</strong><small>What are we trying to understand?</small></div><span class="node-symbol" aria-hidden="true">↗</span></div>
-          <div class="flow-node"><span class="node-number">02</span><div><strong>Evidence</strong><small>What can the data tell us?</small></div><span class="node-symbol" aria-hidden="true">⌁</span></div>
-          <div class="flow-node"><span class="node-number">03</span><div><strong>Interpretation</strong><small>What does it mean—and not mean?</small></div><span class="node-symbol" aria-hidden="true">＋</span></div>
-        </div>
-        <p class="visual-footnote">Method follows the question.</p>
-      </aside>
+    <header class="hero" id="top">
+      <div class="hero-eyebrow">Quantitative Research · Data Analysis · Computational Modeling</div>
+      <h1>Investigating human behavior through <span>statistical rigor & evidence</span>.</h1>
+      <p>Specializing in quantitative research, cross-national survey analysis, statistical modeling, and computational neuroscience. Applied across R, Python, and econometric frameworks.</p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-primary">Explore Research Projects ↓</a>
+        <a href="mailto:anikarajvanshi20@gmail.com" class="btn btn-secondary">Get in Touch ↗</a>
+      </div>
+    </header>
+
+    <div class="filter-bar" id="projects">
+      <div class="section-title">Selected Projects (04)</div>
+      <div class="chips">
+        <button class="chip active" data-filter="all">All Projects</button>
+        <button class="chip" data-filter="society">Behavior & Society</button>
+        <button class="chip" data-filter="neuro">Neuroscience</button>
+        <button class="chip" data-filter="ml">Machine Learning</button>
+      </div>
     </div>
-    <div class="hero-bottom"><span>RESEARCH PORTFOLIO</span><span>INDEPENDENT · ACADEMIC · MENTORED WORK</span></div>
-  </header>
 
-  <main id="main">
-    <section class="work-section" id="projects" aria-labelledby="projects-title">
-      <div class="section-head">
+    <div class="projects-grid">
+      
+      <article class="project-card featured" data-cat="society">
         <div>
-          <p class="section-kicker">01 / SELECTED WORK</p>
-          <h2 id="projects-title">Projects with a question<br class="mobile-break"> at the centre.</h2>
+          <div class="project-tag">Cross-National Data Analysis</div>
+          <h3>National Well-Being & Global Music Consumption</h3>
+          <p>Investigated how macro-economic uncertainty and social support correlate with music listening density across 20 countries. Integrated Spotify API streaming data with the World Happiness Report using non-parametric statistics.</p>
+          <div class="tag-list">
+            <span class="tag">R</span>
+            <span class="tag">ggplot2</span>
+            <span class="tag">Econometrics</span>
+            <span class="tag">Spotify API</span>
+            <span class="tag">Data Wrangling</span>
+          </div>
+          <a href="https://anikarajvanshi20.github.io/National-Well-being-and-Global-Music-Consumption/" target="_blank" rel="noopener" class="project-link">View Full Research Project ↗</a>
         </div>
-        <p class="section-summary">From cross-national data to learning models, each project starts with a problem worth examining.</p>
-      </div>
-
-      <div class="filters" role="group" aria-label="Filter projects by area">
-        <button class="filter-chip is-active" type="button" data-filter="all" aria-pressed="true">All work <span>04</span></button>
-        <button class="filter-chip" type="button" data-filter="society" aria-pressed="false">Behaviour & society</button>
-        <button class="filter-chip" type="button" data-filter="neuroscience" aria-pressed="false">Neuroscience</button>
-        <button class="filter-chip" type="button" data-filter="machine-learning" aria-pressed="false">Machine learning</button>
-        <span class="filter-status" id="filter-status" aria-live="polite"></span>
-      </div>
-
-      <div class="project-grid" id="project-grid">
-        <article class="project-card project-featured" data-category="society">
-          <div class="featured-main">
-            <div class="card-topline"><span class="project-category"><span class="category-dot dot-rose"></span> CROSS-NATIONAL DATA ANALYSIS</span><span class="project-index">01</span></div>
-            <h3>National Well-Being &amp;<br>Global Music Consumption</h3>
-            <p>Explores how economic uncertainty and social support relate to music consumption across 20 countries, combining Spotify streaming data with the World Happiness Report.</p>
-            <div class="tag-row"><span>R</span><span>Data analysis</span><span>ggplot2</span><span>Visualisation</span></div>
-            <a class="text-arrow" href="https://anikarajvanshi20.github.io/National-Well-being-and-Global-Music-Consumption/" target="_blank" rel="noopener noreferrer">View research project <span aria-hidden="true">↗</span></a>
+        <div class="glance-box">
+          <div class="glance-header">SCOPE & DATA SOURCES</div>
+          <div class="stat-number">20</div>
+          <div class="stat-label">Countries in Cross-National Scope</div>
+          <div class="data-flow-item">
+            <span class="flow-index">01</span>
+            <span>Spotify Streaming API</span>
           </div>
-          <div class="featured-visual" aria-label="Project at a glance: 20 countries, Spotify data and World Happiness Report">
-            <div class="mini-chart-label">PROJECT AT A GLANCE</div>
-            <div class="mini-chart-number">20<span> countries in scope</span></div>
-            <div class="source-list">
-              <div class="source-item"><span class="source-number">01</span><div><strong>Spotify</strong><small>Streaming data</small></div></div>
-              <div class="source-item"><span class="source-number">02</span><div><strong>World Happiness Report</strong><small>Well-being indicators</small></div></div>
-            </div>
-            <p class="visual-caption">Two data sources.<br>One cross-national question.</p>
+          <div class="data-flow-item">
+            <span class="flow-index">02</span>
+            <span>World Happiness Indicators</span>
           </div>
-        </article>
+        </div>
+      </article>
 
-        <article class="project-card" data-category="society">
-          <div class="card-topline"><span class="project-category"><span class="category-dot dot-ochre"></span> FIELD-LINKED RESEARCH</span><span class="project-index">02</span></div>
-          <h3>Scientific Curiosity &amp;<br>Career Inclination</h3>
-          <p>Analysis of 500+ observations from students in Classes 6–8, examining patterns in scientific curiosity and career inclination in Kashmir.</p>
-          <div class="tag-row"><span>R</span><span>Survey analysis</span><span>Data cleaning</span></div>
-          <a class="text-arrow" href="https://github.com/anikarajvanshi20/Projects/tree/main/SOS" target="_blank" rel="noopener noreferrer">Browse project files <span aria-hidden="true">↗</span></a>
-        </article>
+      <article class="project-card" data-cat="society">
+        <div>
+          <div class="project-tag">Field Survey & Statistical Modeling</div>
+          <h3>Scientific Curiosity & Career Inclination</h3>
+          <p>Analysis of 500+ field survey observations across middle-school cohorts (Classes 6–8) in Kashmir, examining structural drivers of scientific interest and career aspirations.</p>
+          <div class="tag-list">
+            <span class="tag">R</span>
+            <span class="tag">Survey Analysis</span>
+            <span class="tag">Data Cleaning</span>
+            <span class="tag">Hypothesis Testing</span>
+          </div>
+        </div>
+        <a href="https://github.com/anikarajvanshi20/Projects/tree/main/SOS" target="_blank" rel="noopener" class="project-link">Browse Code Repository ↗</a>
+      </article>
 
-        <article class="project-card" data-category="neuroscience">
-          <div class="card-topline"><span class="project-category"><span class="category-dot dot-plum"></span> COMPUTATIONAL NEUROSCIENCE</span><span class="project-index">03</span></div>
-          <h3>Modelling Hebbian Learning</h3>
-          <p>A computational exploration of Hebbian learning, neural plasticity and mechanisms underlying learning and memory.</p>
-          <div class="tag-row"><span>Python</span><span>Jupyter</span><span>Modelling</span></div>
-          <a class="text-arrow" href="https://github.com/anikarajvanshi20/Projects/tree/main/Computational_Neuroscience" target="_blank" rel="noopener noreferrer">Explore the model <span aria-hidden="true">↗</span></a>
-        </article>
+      <article class="project-card" data-cat="neuro">
+        <div>
+          <div class="project-tag">Computational Neuroscience</div>
+          <h3>Modeling Hebbian Learning Mechanisms</h3>
+          <p>Computational exploration of Hebbian synaptic learning rules, neural plasticity dynamics, and memory encoding under simulated neural inputs.</p>
+          <div class="tag-list">
+            <span class="tag">Python</span>
+            <span class="tag">NumPy</span>
+            <span class="tag">Differential Equations</span>
+            <span class="tag">Jupyter</span>
+          </div>
+        </div>
+        <a href="https://github.com/anikarajvanshi20/Projects/tree/main/Computational_Neuroscience" target="_blank" rel="noopener" class="project-link">Explore Model Notebook ↗</a>
+      </article>
 
-        <article class="project-card project-ml" data-category="machine-learning">
-          <div class="card-topline"><span class="project-category"><span class="category-dot dot-charcoal"></span> APPLIED MACHINE LEARNING</span><span class="project-index">04</span></div>
-          <h3>Statistical &amp; Machine Learning</h3>
-          <p>Five applied models across image classification, sales forecasting, survival prediction, sentiment analysis and housing prediction.</p>
-          <div class="tag-row"><span>Python</span><span>Regression</span><span>Neural networks</span></div>
-          <details class="notebook-list">
-            <summary><span>Explore the five notebooks</span><span class="summary-icon" aria-hidden="true">＋</span></summary>
-            <div class="notebook-links">
-              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Anika_Classification_NN_FashionMNIST.ipynb" target="_blank" rel="noopener noreferrer"><span>FashionMNIST Classification</span><span aria-hidden="true">↗</span></a>
-              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Linear_Regression_Walmart_Sales.ipynb" target="_blank" rel="noopener noreferrer"><span>Walmart Sales Prediction</span><span aria-hidden="true">↗</span></a>
-              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Logistic_Regression_Titanic.ipynb" target="_blank" rel="noopener noreferrer"><span>Titanic Survival Analysis</span><span aria-hidden="true">↗</span></a>
-              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Multi_Modal_sentiment_analysis.ipynb" target="_blank" rel="noopener noreferrer"><span>Multimodal Sentiment Analysis</span><span aria-hidden="true">↗</span></a>
-              <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Regression_NN_California.ipynb" target="_blank" rel="noopener noreferrer"><span>California Housing Prediction</span><span aria-hidden="true">↗</span></a>
-            </div>
-          </details>
-        </article>
+      <article class="project-card" data-cat="ml">
+        <div>
+          <div class="project-tag">Applied Machine Learning</div>
+          <h3>Statistical & Machine Learning Suite</h3>
+          <p>Five applied predictive models across image classification, sales forecasting, survival estimation, sentiment analysis, and housing valuation.</p>
+          
+          <div class="notebook-list">
+            <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Anika_Classification_NN_FashionMNIST.ipynb" target="_blank" rel="noopener" class="notebook-item">
+              <span>FashionMNIST Classification</span>
+              <span>PyTorch ↗</span>
+            </a>
+            <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Linear_Regression_Walmart_Sales.ipynb" target="_blank" rel="noopener" class="notebook-item">
+              <span>Walmart Sales Prediction</span>
+              <span>Regression ↗</span>
+            </a>
+            <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Logistic_Regression_Titanic.ipynb" target="_blank" rel="noopener" class="notebook-item">
+              <span>Titanic Survival Analysis</span>
+              <span>Logistic Reg ↗</span>
+            </a>
+            <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Multi_Modal_sentiment_analysis.ipynb" target="_blank" rel="noopener" class="notebook-item">
+              <span>Multimodal Sentiment Analysis</span>
+              <span>NLP ↗</span>
+            </a>
+            <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Machine_Learning/Regression_NN_California.ipynb" target="_blank" rel="noopener" class="notebook-item">
+              <span>California Housing Prediction</span>
+              <span>Neural Net ↗</span>
+            </a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <section class="skills-section" id="skills">
+      <h2>Technical Toolkit & Research Methods</h2>
+      <p>Comprehensive breakdown of analytical tools, statistical methods, and programming languages applied across projects.</p>
+      
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h4>Statistical Analysis</h4>
+          <div class="skill-tags">
+            <span class="tag">Non-Parametric Tests</span>
+            <span class="tag">Linear & Logistic Regression</span>
+            <span class="tag">Econometrics</span>
+            <span class="tag">Survey Analysis</span>
+            <span class="tag">Time-Series Forecasting</span>
+            <span class="tag">EDA</span>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <h4>Programming & Tools</h4>
+          <div class="skill-tags">
+            <span class="tag">R (tidyverse, ggplot2)</span>
+            <span class="tag">Python (pandas, NumPy)</span>
+            <span class="tag">PyTorch</span>
+            <span class="tag">Scikit-Learn</span>
+            <span class="tag">Jupyter / RStudio</span>
+            <span class="tag">Git & GitHub</span>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <h4>Research Methods</h4>
+          <div class="skill-tags">
+            <span class="tag">Behavioral Research</span>
+            <span class="tag">API Integration</span>
+            <span class="tag">Neural Modeling</span>
+            <span class="tag">Multimodal NLP</span>
+            <span class="tag">Experimental Design</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="approach-section" id="approach" aria-labelledby="approach-title">
-      <div class="approach-intro">
-        <p class="section-kicker">02 / METHODS &amp; TOOLS</p>
-        <h2 id="approach-title">The tools are useful.<br><em>The question comes first.</em></h2>
+    <footer>
+      <div>© <span id="year">2026</span> Anika Rajvanshi</div>
+      <div class="footer-links">
+        <a href="https://github.com/anikarajvanshi20" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/anika-rajvanshi/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:anikarajvanshi20@gmail.com">Email</a>
       </div>
-      <div class="method-list">
-        <div class="method-row"><span class="method-number">01</span><h3>Research</h3><p>Experimental design · Survey research</p></div>
-        <div class="method-row"><span class="method-number">02</span><h3>Analysis</h3><p>Data cleaning · Statistical analysis · Modelling</p></div>
-        <div class="method-row"><span class="method-number">03</span><h3>Tools</h3><p>R · Python · Jupyter</p></div>
-        <div class="method-row"><span class="method-number">04</span><h3>Visualisation</h3><p>ggplot2 · matplotlib · Plotly</p></div>
-      </div>
-    </section>
+    </footer>
+  </div>
 
-    <section class="contact-strip" id="contact" aria-labelledby="contact-title">
-      <div><p class="section-kicker">NEXT CONVERSATION</p><h2 id="contact-title">Good questions lead<br>to better work.</h2></div>
-      <a class="button button-dark" href="mailto:anikarajvanshi20@gmail.com">Email Anika <span aria-hidden="true">↗</span></a>
-    </section>
-  </main>
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="project-tag" id="modal-tag">Project Overview</div>
+      <h3 id="modal-title" style="font-size: 20px; font-weight: 700; margin-bottom: 12px;"></h3>
+      <p id="modal-desc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;"></p>
+      <div class="tag-list" id="modal-tags"></div>
+      <a id="modal-link" href="#" target="_blank" rel="noopener" class="btn btn-primary" style="margin-top: 10px;">Open Project ↗</a>
+    </div>
+  </div>
 
-  <footer class="footer">
-    <span>© <span id="year">2026</span> Anika Rajvanshi</span>
-    <span class="footer-note">Built around curiosity, evidence and careful interpretation.</span>
-    <div class="footer-links"><a href="https://github.com/anikarajvanshi20/Projects" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/anika-rajvanshi/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
-  </footer>
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    function setTheme(mode) {
+      if (mode === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        toggleBtn.childNodes[1].nodeValue = ' Light Mode';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        toggleBtn.childNodes[1].nodeValue = ' Dark Mode';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(savedTheme);
+
+    toggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.hasAttribute('data-theme');
+      setTheme(isDark ? 'light' : 'dark');
+    });
+
+    const chips = document.querySelectorAll('.chip');
+    const cards = document.querySelectorAll('.project-card');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const filter = chip.dataset.filter;
+
+        cards.forEach(card => {
+          if (filter === 'all' || card.dataset.cat === filter) {
+            card.style.display = card.classList.contains('featured') ? 'grid' : 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    const mouse = { x: -1000, y: -1000 };
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      const count = Math.min(65, Math.floor((width * height) / 15000));
+      
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 1.5 + 1
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      const computedStyle = getComputedStyle(document.body);
+      const particleColor = computedStyle.getPropertyValue('--canvas-particle').trim();
+      const lineColor = computedStyle.getPropertyValue('--canvas-line').trim();
+
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = particleColor;
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          let p2 = particles[j];
+          let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+
+        let mouseDist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+        if (mouseDist < 140) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.strokeStyle = lineColor;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    draw();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
