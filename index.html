@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Anika Rajvanshi — Quantitative Research & Data Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -451,10 +451,112 @@
     .footer-links a { color: var(--text-muted); text-decoration: none; }
     .footer-links a:hover { color: var(--accent); }
 
-    @media (max-width: 768px) {
-      .projects-grid, .skills-grid { grid-template-columns: 1fr; }
-      .project-card.featured { grid-template-columns: 1fr; }
-      header.hero { padding: 28px 0 20px; }
+  /* =========================================================
+   MOBILE & TABLET RESPONSIVE STYLES
+   ========================================================= */
+
+/* Tablet & Mobile Breakpoint (<= 768px) */
+@media (max-width: 768px) {
+  /* Reduce horizontal container padding */
+  .wrapper {
+    padding: 0 16px;
+  }
+
+  /* Compact Navbar */
+  nav {
+    padding: 14px 0;
+  }
+  .nav-actions {
+    gap: 10px;
+  }
+  .nav-link {
+    font-size: 12px;
+  }
+  .theme-toggle {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  /* Scale Down Hero Typography */
+  header.hero {
+    padding: 24px 0 20px;
+  }
+  .hero h1 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+  .hero p {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px; /* Larger touch target for mobile thumbs */
+  }
+
+  /* Scrollable Filter Chips (Prevent Wrapping Glitches) */
+  .filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .chips {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+  .chip {
+    flex-shrink: 0;
+  }
+
+  /* Convert Multi-column Grids to Single Column */
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .project-card.featured {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Mobile Notebook List Items */
+  .notebook-item {
+    padding: 8px 0; /* Increase tap area for mobile finger clicks */
+  }
+
+  /* Footer Adjustment */
+  footer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+/* Small Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  .brand span {
+    display: none; /* Hide full text name on extra small screens, show AR avatar */
+  }
+  .nav-actions .nav-link:not([href*="github"]) {
+    display: none; /* Hide secondary text links on tiny screens to prevent nav overflow */
+  }
+  .hero h1 {
+    font-size: 21px;
+  }
+}
     }
   </style>
 </head>
@@ -466,10 +568,8 @@
     <nav>
       <a href="#top" class="brand">
         <div class="brand-avatar">AR</div>
-        <span>Anika Rajvanshi</span>
       </a>
       <div class="nav-actions">
-        <a href="#projects" class="nav-link">Selected Work</a>
         <a href="#skills" class="nav-link">Toolkit</a>
         <a href="https://github.com/anikarajvanshi20" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a>
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light and dark mode">
@@ -479,28 +579,19 @@
     </nav>
 
     <header class="hero" id="top">
-      <h1>Investigating human behavior through <span>statistical rigor & evidence</span>.</h1>
-      <p> Quantitative research, statistical modeling, and computational neuroscience. Applied across R, Python, and econometric frameworks.</p>
+      <h2>Anika <span>Rajvanshi</span>.</h2>
+      <p>I am a Psychology major with a minor in Biology, with experience applying statistical analysis and computational methods to questions in human behaviour, social data, and neuroscience.</p>
     </header>
-
-    <div class="filter-bar" id="projects">
-      <div class="section-title">Selected Projects (04)</div>
-      <div class="chips">
-        <button class="chip active" data-filter="all">All Projects</button>
-        <button class="chip" data-filter="society">Behavior & Society</button>
-        <button class="chip" data-filter="neuro">Neuroscience</button>
-        <button class="chip" data-filter="ml">Machine Learning</button>
-      </div>
-    </div>
-
+    <div class="section-title">Projects</div>
     <div class="projects-grid">
       
       <article class="project-card featured" data-cat="society">
         <div>
           <div class="project-tag">Cross-National Data Analysis</div>
           <h3>National Well-Being & Global Music Consumption</h3>
-          <p>Investigated how eeconomic uncertainty and social support influence global music consumption patterns using Spotify streaming data and the World Happiness Report across 20 countries.</p>
+          <p>Investigated how economic uncertainty and social support influence global music consumption patterns using Spotify streaming data and the World Happiness Report across 20 countries.</p>
           <div class="tag-list">
+            <span class="tag">Behaviour & Society</span>
             <span class="tag">R</span>
             <span class="tag">ggplot2</span>
             <span class="tag">Behavioural Economics</span>
@@ -509,9 +600,7 @@
           <a href="https://anikarajvanshi20.github.io/National-Well-being-and-Global-Music-Consumption/" target="_blank" rel="noopener" class="project-link">View Full Research Project ↗</a>
         </div>
         <div class="glance-box">
-          <div class="glance-header">SCOPE & DATA SOURCES</div>
-          <div class="stat-number">20</div>
-          <div class="stat-label">Countries in Cross-National Scope</div>
+          <div class="glance-header">DATA SOURCES</div>
           <div class="data-flow-item">
             <span class="flow-index">01</span>
             <span>Spotify streaming dataset(from Kaggle)</span>
@@ -529,6 +618,8 @@
           <h3>Scientific Curiosity & Career Inclination</h3>
           <p>Analysis of 500+ field survey observations across middle-school cohorts (Classes 6–8) in Kashmir, examining structural drivers of scientific interest and career aspirations.</p>
           <div class="tag-list">
+            <span class="tag">Behaviour & Society</span>
+            <span class="tag">Educational Psychology</span>
             <span class="tag">R</span>
             <span class="tag">Survey Analysis</span>
             <span class="tag">Data Cleaning</span>
@@ -550,7 +641,7 @@
             <span class="tag">Jupyter</span>
           </div>
         </div>
-        <a href="https://github.com/anikarajvanshi20/Projects/tree/main/Computational_Neuroscience" target="_blank" rel="noopener" class="project-link">Explore Model Notebook ↗</a>
+        <a href="https://github.com/anikarajvanshi20/Projects/blob/main/Computational_Neuroscience/Modelling_Hebbian_Learning.ipynb" target="_blank" rel="noopener" class="project-link">Explore Model Notebook ↗</a>
       </article>
 
       <article class="project-card" data-cat="ml">
@@ -588,15 +679,13 @@
 
     <section class="skills-section" id="skills">
       <h2>Technical Skills & Research Methods</h2>
-      <p>Comprehensive breakdown of analytical tools, statistical methods, and programming languages applied across projects.</p>
-      
       <div class="skills-grid">
         <div class="skill-category">
           <h4>Statistical Analysis</h4>
           <div class="skill-tags">
             <span class="tag">Non-Parametric Tests</span>
             <span class="tag">Linear & Logistic Regression</span>
-            <span class="tag">Econometrics</span>
+            <span class="tag">Neural Networks </span>
             <span class="tag">Survey Analysis</span>
           </div>
         </div>
@@ -697,18 +786,22 @@
     const mouse = { x: -1000, y: -1000 };
 
     function resizeCanvas() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      const count = Math.min(65, Math.floor((width * height) / 15000));
-      
-      particles = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: Math.random() * 1.5 + 1
-      }));
-    }
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+  
+  // Detect mobile width to drop particle density for battery saving & smooth 60fps
+  const isMobile = width <= 768;
+  const divisor = isMobile ? 25000 : 15000;
+  const count = Math.min(isMobile ? 30 : 65, Math.floor((width * height) / divisor));
+  
+  particles = Array.from({ length: count }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * (isMobile ? 0.25 : 0.4),
+    vy: (Math.random() - 0.5) * (isMobile ? 0.25 : 0.4),
+    r: Math.random() * 1.5 + 1
+  }));
+}
 
     function draw() {
       ctx.clearRect(0, 0, width, height);
